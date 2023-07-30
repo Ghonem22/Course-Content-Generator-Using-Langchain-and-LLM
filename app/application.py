@@ -14,15 +14,15 @@ class CourseInputData(BaseModel):
     course_tags: Optional[str] = ""
 
 
-app = FastAPI()
+application = FastAPI()
 
 
-@app.get("/")
+@application.get("/")
 def home():
     return {"Data": "API Is Working"}
 
 
-@app.post("/generate")
+@application.post("/generate")
 async def generate_course_info(data: CourseInputData):
     # extract info required to trigger the job
     course_name = data.course_name
