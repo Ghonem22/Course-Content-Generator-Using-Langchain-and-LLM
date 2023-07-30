@@ -1,12 +1,15 @@
 # Author: Mahmoud GHonem: mahmoud.gh2016@gmail.com
 import json
-from fastapi import FastAPI, Request, BackgroundTasks
+# from simple_token import *
+from fastapi import FastAPI
 from LLM.course_content_generator import *
 from pydantic import BaseModel
 from typing import Optional
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
 
+
+# @application.get("/test")
+# def home(token: str = Depends(validate_token)):
+#     return {"Data": "API Is Working"}
 
 class CourseInputData(BaseModel):
     course_name: str
@@ -34,7 +37,7 @@ async def generate_course_info(data: CourseInputData):
             course = {course_name}
             level = {course_level}
             keywords = {course_tags}
-        
+
             """
     course_info = llm(similar_prompt.format(input_text=text)).strip()
 
