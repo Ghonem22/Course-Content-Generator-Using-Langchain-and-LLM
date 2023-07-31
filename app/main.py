@@ -1,13 +1,13 @@
 # Author: Mahmoud GHonem: mahmoud.gh2016@gmail.com
-import json
-# from simple_token import *
-from fastapi import FastAPI
+
+from fastapi import FastAPI, Request, BackgroundTasks
 from LLM.course_content_generator import *
 from pydantic import BaseModel
 from typing import Optional
+# from simple_token import *
 
 
-# @application.get("/test")
+# @app.get("/test")
 # def home(token: str = Depends(validate_token)):
 #     return {"Data": "API Is Working"}
 
@@ -17,15 +17,15 @@ class CourseInputData(BaseModel):
     course_tags: Optional[str] = ""
 
 
-application = FastAPI()
+app = FastAPI()
 
 
-@application.get("/")
+@app.get("/")
 def home():
     return {"Data": "API Is Working"}
 
 
-@application.post("/generate")
+@app.post("/generate")
 async def generate_course_info(data: CourseInputData):
     # extract info required to trigger the job
     course_name = data.course_name
@@ -37,7 +37,7 @@ async def generate_course_info(data: CourseInputData):
             course = {course_name}
             level = {course_level}
             keywords = {course_tags}
-
+        
             """
     course_info = llm(similar_prompt.format(input_text=text)).strip()
 
