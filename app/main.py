@@ -5,6 +5,13 @@ from LLM.course_content_generator import *
 from pydantic import BaseModel
 from typing import Optional
 # from simple_token import *
+# import pandas as pd
+import numpy as np
+import pickle
+import warnings
+warnings.filterwarnings('ignore')
+
+model = pickle.load(open('pricing_model.pkl', 'rb'))
 
 
 # @app.get("/test")
@@ -15,6 +22,13 @@ class CourseInputData(BaseModel):
     course_name: str
     course_level: Optional[str] = "متوسط"
     course_tags: Optional[str] = ""
+
+
+class PricingInputData(BaseModel):
+    Duration: float
+    Level: int
+    Country: int
+    Category: int
 
 
 app = FastAPI()
@@ -45,3 +59,25 @@ async def generate_course_info(data: CourseInputData):
         'statusCode': 200,
         'body': course_info
     }
+
+
+@app.post('/predict_price')
+async def predict(data: PricingInputData):
+    Duration = data.Duration
+    Level = data.Level
+    Country = data.Country
+    Category = data.Category
+
+    lov = [Duration, Level, Country, Category]
+    input_data = np.array([lov])
+
+    print("data", input_data)
+    # return data
+
+    # query = pd.DataFrame(input_data)
+    # print("query \n", query)
+    prediction = model.predict(input_data)
+
+
+    print("prediction", prediction)
+    return {'prediction': prediction[0]}
